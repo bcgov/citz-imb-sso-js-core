@@ -8,7 +8,7 @@ import type {
 } from './indentityProviders';
 import { HasRolesOptions } from './options';
 
-type BaseTokenPayload<TProvider extends SSOIdentityProvider> = {
+type BaseTokenPayload<TProvider extends SSOIdentityProvider | unknown> = {
   exp: number;
   iat: number;
   auth_time: number;
@@ -71,22 +71,31 @@ export type SSODigitalCredentialsUser<TDCAttributes extends string | undefined> 
   vc_presented_attributes: VCPresentedAttributes<TDCAttributes>;
 };
 
+// Define a mapping object for the different user types
+type UserTypeMapping<TDCAttributes extends string | undefined> = {
+  [Key in SSOIdentityProvider]: Key extends IdirIdentityProvider
+    ? SSOIdirUser // Map IdirIdentityProvider to SSOIdirUser type
+    : Key extends BceidIdentityProvider
+      ? SSOBCeIDUser // Map BceidIdentityProvider to SSOBCeIDUser type
+      : Key extends GithubIdentityProvider
+        ? SSOGithubUser // Map GithubIdentityProvider to SSOGithubUser type
+        : Key extends DigitalCredentialsIdentityProvider
+          ? SSODigitalCredentialsUser<TDCAttributes> // Map DigitalCredentialsIdentityProvider to SSODigitalCredentialsUser type
+          : never;
+};
+
+// Returns OriginalSSOUser type as a combination of BaseTokenPayload &
+// the associated identity provider user as long as TProvider is a valid idp.
+// If an invalid or unknown TProvider is provided, BaseTokenPayload<unknown> is returned.
 export type OriginalSSOUser<
-  TProvider extends SSOIdentityProvider,
+  TProvider extends SSOIdentityProvider | unknown,
   TDCAttributes extends string | undefined = undefined,
-> = TProvider extends IdirIdentityProvider
-  ? BaseTokenPayload<IdirIdentityProvider> & SSOIdirUser
-  : TProvider extends BceidIdentityProvider
-    ? BaseTokenPayload<BceidIdentityProvider> & SSOBCeIDUser
-    : TProvider extends GithubIdentityProvider
-      ? BaseTokenPayload<GithubIdentityProvider> & SSOGithubUser
-      : TProvider extends DigitalCredentialsIdentityProvider
-        ? BaseTokenPayload<DigitalCredentialsIdentityProvider> &
-            SSODigitalCredentialsUser<TDCAttributes>
-        : never;
+> = TProvider extends SSOIdentityProvider
+  ? BaseTokenPayload<TProvider> & UserTypeMapping<TDCAttributes>[TProvider]
+  : BaseTokenPayload<unknown>;
 
 export type SSOUser<
-  TProvider extends SSOIdentityProvider,
+  TProvider extends SSOIdentityProvider | unknown,
   TDCAttributes extends string | undefined = undefined,
 > = BaseTokenPayload<TProvider> & {
   guid: string;
