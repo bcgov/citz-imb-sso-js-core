@@ -63,16 +63,16 @@ export type SSOGithubUser = {
 };
 
 type JsonString<T> = string & { __jsonString: T };
-export type VCPresentedAttributes<TDCAttributes extends string | undefined> =
+export type VCPresentedAttributes<TDCAttributes extends object | undefined> =
   JsonString<TDCAttributes>;
 
-export type SSODigitalCredentialsUser<TDCAttributes extends string | undefined> = {
+export type SSODigitalCredentialsUser<TDCAttributes extends object | undefined> = {
   pres_req_conf_id: string;
   vc_presented_attributes: VCPresentedAttributes<TDCAttributes>;
 };
 
 // Define a mapping object for the different user types
-type UserTypeMapping<TDCAttributes extends string | undefined> = {
+type UserTypeMapping<TDCAttributes extends object | undefined> = {
   [Key in SSOIdentityProvider]: Key extends IdirIdentityProvider
     ? SSOIdirUser // Map IdirIdentityProvider to SSOIdirUser type
     : Key extends BceidIdentityProvider
@@ -89,14 +89,14 @@ type UserTypeMapping<TDCAttributes extends string | undefined> = {
 // If an invalid or unknown TProvider is provided, BaseTokenPayload<unknown> is returned.
 export type OriginalSSOUser<
   TProvider extends SSOIdentityProvider | unknown,
-  TDCAttributes extends string | undefined = undefined,
+  TDCAttributes extends object | undefined = undefined,
 > = TProvider extends SSOIdentityProvider
   ? BaseTokenPayload<TProvider> & UserTypeMapping<TDCAttributes>[TProvider]
   : BaseTokenPayload<unknown>;
 
 export type SSOUser<
   TProvider extends SSOIdentityProvider | unknown,
-  TDCAttributes extends string | undefined = undefined,
+  TDCAttributes extends object | undefined = undefined,
 > = BaseTokenPayload<TProvider> & {
   guid: string;
   username: string;

@@ -10,8 +10,8 @@ const hasAtLeastOneRole = (userRoles: string[], requiredRoles: string[]) =>
 
 // Return true if the user has the specified roles.
 export const hasRoles = <
-  TProvider extends SSOIdentityProvider,
-  TDCAttributes extends string | undefined = undefined,
+  TProvider extends SSOIdentityProvider | unknown,
+  TDCAttributes extends object | undefined = undefined,
 >(
   user: OriginalSSOUser<TProvider, TDCAttributes>,
   roles: string[],

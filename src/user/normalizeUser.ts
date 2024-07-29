@@ -19,7 +19,7 @@ import { hasRoles } from './hasRoles';
 // Combine properties of each user type into a single object
 export const normalizeUser = <
   TProvider extends SSOIdentityProvider,
-  TDCAttributes extends string | undefined = undefined,
+  TDCAttributes extends object | undefined = undefined,
 >(
   userInfo: OriginalSSOUser<TProvider, TDCAttributes>,
 ): SSOUser<TProvider, TDCAttributes> => {
