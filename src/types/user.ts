@@ -20,29 +20,34 @@ type BaseTokenPayload<TProvider extends SSOIdentityProvider> = {
   azp: string;
   nonce: string;
   session_state: string;
-  scope?: string;
-  at_hash?: string;
+  scope?: string | undefined;
+  at_hash?: string | undefined;
   sid: string;
   identity_provider: TProvider;
   email_verified: boolean;
-  name: string;
   preferred_username: string;
-  display_name: string;
-  given_name: string;
-  family_name: string;
-  email: string;
-  client_roles?: string[];
+  client_roles?: string[] | undefined;
 };
 
 export type SSOIdirUser = {
   idir_user_guid: string;
   idir_username: string;
+  name: string;
+  display_name: string;
+  given_name: string;
+  family_name: string;
+  email: string;
 };
 
 export type SSOBCeIDUser = {
   bceid_user_guid: string;
   bceid_username: string;
   bceid_business_name?: string;
+  name: string;
+  display_name: string;
+  given_name: string;
+  family_name: string;
+  email: string;
 };
 
 export type SSOGithubUser = {
@@ -50,28 +55,46 @@ export type SSOGithubUser = {
   github_username: string;
   orgs: string;
   org_verified: string;
+  name: string;
+  display_name: string;
+  given_name: string;
+  family_name: string;
+  email: string;
 };
 
-export type SSODigitalCredentialsUser = {
-  vc_presented_attributes: Record<string, string>;
+type JsonString<T> = string & { __jsonString: T };
+export type VCPresentedAttributes<TDCAttributes extends string | undefined> =
+  JsonString<TDCAttributes>;
+
+export type SSODigitalCredentialsUser<TDCAttributes extends string | undefined> = {
+  pres_req_conf_id: string;
+  vc_presented_attributes: VCPresentedAttributes<TDCAttributes>;
 };
 
-export type OriginalSSOUser<TProvider extends SSOIdentityProvider> =
-  TProvider extends IdirIdentityProvider
-    ? SSOIdirUser
-    : TProvider extends BceidIdentityProvider
-      ? SSOBCeIDUser
-      : TProvider extends GithubIdentityProvider
-        ? SSOGithubUser
-        : TProvider extends DigitalCredentialsIdentityProvider
-          ? SSODigitalCredentialsUser
-          : never;
+export type OriginalSSOUser<
+  TProvider extends SSOIdentityProvider,
+  TDCAttributes extends string | undefined = undefined,
+> = TProvider extends IdirIdentityProvider
+  ? BaseTokenPayload<IdirIdentityProvider> & SSOIdirUser
+  : TProvider extends BceidIdentityProvider
+    ? BaseTokenPayload<BceidIdentityProvider> & SSOBCeIDUser
+    : TProvider extends GithubIdentityProvider
+      ? BaseTokenPayload<GithubIdentityProvider> & SSOGithubUser
+      : TProvider extends DigitalCredentialsIdentityProvider
+        ? BaseTokenPayload<DigitalCredentialsIdentityProvider> &
+            SSODigitalCredentialsUser<TDCAttributes>
+        : never;
 
-export type SSOUser<TProvider extends SSOIdentityProvider> = BaseTokenPayload<TProvider> & {
+export type SSOUser<
+  TProvider extends SSOIdentityProvider,
+  TDCAttributes extends string | undefined = undefined,
+> = BaseTokenPayload<TProvider> & {
   guid: string;
   username: string;
-  first_name: string;
-  last_name: string;
-  originalTokenPayload: OriginalSSOUser<TProvider>;
+  display_name?: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  originalTokenPayload: OriginalSSOUser<TProvider, TDCAttributes>;
   hasRoles: (roles: string[], options?: HasRolesOptions) => boolean;
 };
