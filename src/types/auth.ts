@@ -41,3 +41,34 @@ export type GetTokensProps = {
   ssoRealm?: string;
   ssoProtocol?: SSOProtocol;
 };
+
+export type GetNewTokensProps = {
+  refreshToken: string;
+  clientID: string;
+  clientSecret: string;
+  ssoEnvironment?: SSOEnvironment;
+  ssoRealm?: string;
+  ssoProtocol?: SSOProtocol;
+};
+
+export type IsJWTValidProps = {
+  jwt: string;
+  clientID: string;
+  clientSecret: string;
+  ssoEnvironment?: SSOEnvironment;
+  ssoRealm?: string;
+  ssoProtocol?: SSOProtocol;
+};
+
+export type GetTokensResponse = {
+  id_token: string;
+  access_token: string;
+  refresh_token: string;
+  refresh_expires_in: number;
+};
+
+export type GetNewTokensResponse = {
+  access_token: string;
+  id_token: string;
+  expires_in: number;
+} | null;

@@ -2,7 +2,7 @@ import qs from 'querystring';
 import { GetLogoutURLProps } from '../types';
 import { AUTH_URLS, SITE_MINDER_LOGOUT_URLS } from '../constants';
 
-export const getLogoutURL = (props: GetLogoutURLProps) => {
+export const getLogoutURL = (props: GetLogoutURLProps): string => {
   const {
     idToken,
     postLogoutRedirectURI,

@@ -6,7 +6,7 @@ import { AUTH_URLS } from '../constants';
  * Gets the authorization URL to redirect the user to the OIDC server for authentication.
  * See https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.1
  */
-export const getLoginURL = (props: GetLoginURLProps) => {
+export const getLoginURL = (props: GetLoginURLProps): string => {
   const {
     idpHint,
     clientID,
