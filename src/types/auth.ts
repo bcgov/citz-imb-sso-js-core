@@ -30,3 +30,14 @@ export type GetLogoutURLProps = {
   ssoRealm?: string;
   ssoProtocol?: SSOProtocol;
 };
+
+export type GetTokensProps = {
+  code: string;
+  grantType?: string;
+  clientID: string;
+  clientSecret: string;
+  redirectURI: string;
+  ssoEnvironment?: SSOEnvironment;
+  ssoRealm?: string;
+  ssoProtocol?: SSOProtocol;
+};
