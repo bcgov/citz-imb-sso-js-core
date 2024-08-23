@@ -1,4 +1,3 @@
-import querystring from 'querystring';
 import { getLoginURL } from '@/authentication';
 import { AUTH_URLS } from '@/constants';
 import { GetLoginURLProps } from '@/types';
@@ -11,15 +10,19 @@ describe('getLoginURL', () => {
       redirectURI: 'https://myapp.com/callback',
     };
 
-    const expectedURL = `${AUTH_URLS.dev}/realms/standard/protocol/oidc/auth?${querystring.stringify(
-      {
-        client_id: props.clientID,
-        response_type: 'code',
-        scope: 'email+openid',
-        redirect_uri: encodeURIComponent(props.redirectURI),
-        kc_idp_hint: props.idpHint,
-      },
-    )}`;
+    const params: Record<string, string> = {
+      client_id: props.clientID,
+      response_type: 'code',
+      scope: 'email+openid',
+      redirect_uri: props.redirectURI,
+      kc_idp_hint: props.idpHint,
+    };
+
+    const queryString = Object.keys(params)
+      .map((key) => `${key}=${params[key]}`)
+      .join('&');
+
+    const expectedURL = `${AUTH_URLS.dev}/realms/standard/protocol/openid-connect/auth?${queryString}`;
 
     expect(getLoginURL(props)).toBe(expectedURL);
   });
@@ -36,15 +39,19 @@ describe('getLoginURL', () => {
       ssoProtocol: 'saml',
     };
 
-    const expectedURL = `${AUTH_URLS.test}/realms/custom/protocol/saml/auth?${querystring.stringify(
-      {
-        client_id: props.clientID,
-        response_type: props.responseType,
-        scope: props.scope,
-        redirect_uri: encodeURIComponent(props.redirectURI),
-        kc_idp_hint: props.idpHint,
-      },
-    )}`;
+    const params: Record<string, unknown> = {
+      client_id: props.clientID,
+      response_type: props.responseType,
+      scope: props.scope,
+      redirect_uri: props.redirectURI,
+      kc_idp_hint: props.idpHint,
+    };
+
+    const queryString = Object.keys(params)
+      .map((key) => `${key}=${params[key]}`)
+      .join('&');
+
+    const expectedURL = `${AUTH_URLS.test}/realms/custom/protocol/saml/auth?${queryString}`;
 
     expect(getLoginURL(props)).toBe(expectedURL);
   });
@@ -58,16 +65,22 @@ describe('getLoginURL', () => {
       redirectURI: 'https://prodapp.com/callback',
       ssoEnvironment: 'prod',
       ssoRealm: 'other',
-      ssoProtocol: 'oidc',
+      ssoProtocol: 'openid-connect',
     };
 
-    const expectedURL = `${AUTH_URLS.prod}/realms/other/protocol/oidc/auth?${querystring.stringify({
+    const params: Record<string, unknown> = {
       client_id: props.clientID,
       response_type: props.responseType,
       scope: props.scope,
-      redirect_uri: encodeURIComponent(props.redirectURI),
+      redirect_uri: props.redirectURI,
       kc_idp_hint: props.idpHint,
-    })}`;
+    };
+
+    const queryString = Object.keys(params)
+      .map((key) => `${key}=${params[key]}`)
+      .join('&');
+
+    const expectedURL = `${AUTH_URLS.prod}/realms/other/protocol/openid-connect/auth?${queryString}`;
 
     expect(getLoginURL(props)).toBe(expectedURL);
   });
@@ -80,15 +93,19 @@ describe('getLoginURL', () => {
       ssoEnvironment: 'dev',
     };
 
-    const expectedURL = `${AUTH_URLS.dev}/realms/standard/protocol/oidc/auth?${querystring.stringify(
-      {
-        client_id: props.clientID,
-        response_type: 'code',
-        scope: 'email+openid',
-        redirect_uri: encodeURIComponent(props.redirectURI),
-        kc_idp_hint: props.idpHint,
-      },
-    )}`;
+    const params: Record<string, unknown> = {
+      client_id: props.clientID,
+      response_type: 'code',
+      scope: 'email+openid',
+      redirect_uri: props.redirectURI,
+      kc_idp_hint: props.idpHint,
+    };
+
+    const queryString = Object.keys(params)
+      .map((key) => `${key}=${params[key]}`)
+      .join('&');
+
+    const expectedURL = `${AUTH_URLS.dev}/realms/standard/protocol/openid-connect/auth?${queryString}`;
 
     expect(getLoginURL(props)).toBe(expectedURL);
   });

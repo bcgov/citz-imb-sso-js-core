@@ -9,7 +9,7 @@ export const isJWTValid = async (props: IsJWTValidProps): Promise<boolean> => {
     clientSecret,
     ssoEnvironment = 'dev',
     ssoRealm = 'standard',
-    ssoProtocol = 'oidc',
+    ssoProtocol = 'openid-connect',
   } = props;
 
   const params = {

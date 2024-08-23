@@ -49,14 +49,17 @@ describe('getTokens', () => {
       'base64',
     );
 
-    expect(fetchMock).toHaveBeenCalledWith(`${AUTH_URLS.dev}/realms/standard/protocol/oidc/token`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${expectedAuthHeader}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
+    expect(fetchMock).toHaveBeenCalledWith(
+      `${AUTH_URLS.dev}/realms/standard/protocol/openid-connect/token`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Basic ${expectedAuthHeader}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: querystring.stringify(expectedParams),
       },
-      body: querystring.stringify(expectedParams),
-    });
+    );
   });
 
   it('should use the specified environment and realm', async () => {
@@ -96,14 +99,17 @@ describe('getTokens', () => {
       'base64',
     );
 
-    expect(fetchMock).toHaveBeenCalledWith(`${AUTH_URLS.test}/realms/custom/protocol/oidc/token`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${expectedAuthHeader}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
+    expect(fetchMock).toHaveBeenCalledWith(
+      `${AUTH_URLS.test}/realms/custom/protocol/openid-connect/token`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Basic ${expectedAuthHeader}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: querystring.stringify(expectedParams),
       },
-      body: querystring.stringify(expectedParams),
-    });
+    );
   });
 
   it('should throw an error if the fetch fails', async () => {
@@ -166,11 +172,14 @@ describe('getNewTokens', () => {
       refresh_token: props.refreshToken,
     };
 
-    expect(fetchMock).toHaveBeenCalledWith(`${AUTH_URLS.dev}/realms/standard/protocol/oidc/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: querystring.stringify(expectedParams),
-    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      `${AUTH_URLS.dev}/realms/standard/protocol/openid-connect/token`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: querystring.stringify(expectedParams),
+      },
+    );
 
     expect(isJWTValidMock).toHaveBeenCalledWith({
       jwt: props.refreshToken,
@@ -260,11 +269,14 @@ describe('getNewTokens', () => {
       refresh_token: props.refreshToken,
     };
 
-    expect(fetchMock).toHaveBeenCalledWith(`${AUTH_URLS.test}/realms/custom/protocol/oidc/token`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: querystring.stringify(expectedParams),
-    });
+    expect(fetchMock).toHaveBeenCalledWith(
+      `${AUTH_URLS.test}/realms/custom/protocol/openid-connect/token`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: querystring.stringify(expectedParams),
+      },
+    );
 
     expect(isJWTValidMock).toHaveBeenCalledWith({
       jwt: props.refreshToken,

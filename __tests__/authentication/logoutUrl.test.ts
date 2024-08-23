@@ -1,4 +1,3 @@
-import querystring from 'querystring';
 import { getLogoutURL } from '@/authentication';
 import { AUTH_URLS, SITE_MINDER_LOGOUT_URLS } from '@/constants';
 import { GetLogoutURLProps } from '@/types';
@@ -10,18 +9,26 @@ describe('getLogoutURL', () => {
       postLogoutRedirectURI: 'https://myapp.com/logout',
     };
 
-    const keycloakParams = {
+    const keycloakParams: Record<string, unknown> = {
       id_token_hint: props.idToken,
-      post_logout_redirect_uri: encodeURIComponent(props.postLogoutRedirectURI),
+      post_logout_redirect_uri: props.postLogoutRedirectURI,
     };
 
-    const authURL = `${AUTH_URLS.dev}/realms/standard/protocol/oidc`;
-    const siteMinderParams = {
+    const kcQueryString = Object.keys(keycloakParams)
+      .map((key) => `${key}=${keycloakParams[key]}`)
+      .join('&');
+
+    const authURL = `${AUTH_URLS.dev}/realms/standard/protocol/openid-connect`;
+    const siteMinderParams: Record<string, unknown> = {
       retnow: 1,
-      returl: encodeURIComponent(`${authURL}/logout?${querystring.stringify(keycloakParams)}`),
+      returl: encodeURIComponent(`${authURL}/logout?${kcQueryString}`),
     };
 
-    const expectedURL = `${SITE_MINDER_LOGOUT_URLS.dev}?${querystring.stringify(siteMinderParams)}`;
+    const smQueryString = Object.keys(siteMinderParams)
+      .map((key) => `${key}=${siteMinderParams[key]}`)
+      .join('&');
+
+    const expectedURL = `${SITE_MINDER_LOGOUT_URLS.dev}?${smQueryString}`;
 
     expect(getLogoutURL(props)).toBe(expectedURL);
   });
@@ -35,18 +42,26 @@ describe('getLogoutURL', () => {
       ssoProtocol: 'saml',
     };
 
-    const keycloakParams = {
+    const keycloakParams: Record<string, unknown> = {
       id_token_hint: props.idToken,
-      post_logout_redirect_uri: encodeURIComponent(props.postLogoutRedirectURI),
+      post_logout_redirect_uri: props.postLogoutRedirectURI,
     };
+
+    const kcQueryString = Object.keys(keycloakParams)
+      .map((key) => `${key}=${keycloakParams[key]}`)
+      .join('&');
 
     const authURL = `${AUTH_URLS.test}/realms/custom/protocol/saml`;
-    const siteMinderParams = {
+    const siteMinderParams: Record<string, unknown> = {
       retnow: 1,
-      returl: encodeURIComponent(`${authURL}/logout?${querystring.stringify(keycloakParams)}`),
+      returl: encodeURIComponent(`${authURL}/logout?${kcQueryString}`),
     };
 
-    const expectedURL = `${SITE_MINDER_LOGOUT_URLS.test}?${querystring.stringify(siteMinderParams)}`;
+    const smQueryString = Object.keys(siteMinderParams)
+      .map((key) => `${key}=${siteMinderParams[key]}`)
+      .join('&');
+
+    const expectedURL = `${SITE_MINDER_LOGOUT_URLS.test}?${smQueryString}`;
 
     expect(getLogoutURL(props)).toBe(expectedURL);
   });
@@ -57,21 +72,29 @@ describe('getLogoutURL', () => {
       postLogoutRedirectURI: 'https://prodapp.com/logout',
       ssoEnvironment: 'prod',
       ssoRealm: 'other',
-      ssoProtocol: 'oidc',
+      ssoProtocol: 'openid-connect',
     };
 
-    const keycloakParams = {
+    const keycloakParams: Record<string, unknown> = {
       id_token_hint: props.idToken,
-      post_logout_redirect_uri: encodeURIComponent(props.postLogoutRedirectURI),
+      post_logout_redirect_uri: props.postLogoutRedirectURI,
     };
 
-    const authURL = `${AUTH_URLS.prod}/realms/other/protocol/oidc`;
-    const siteMinderParams = {
+    const kcQueryString = Object.keys(keycloakParams)
+      .map((key) => `${key}=${keycloakParams[key]}`)
+      .join('&');
+
+    const authURL = `${AUTH_URLS.prod}/realms/other/protocol/openid-connect`;
+    const siteMinderParams: Record<string, unknown> = {
       retnow: 1,
-      returl: encodeURIComponent(`${authURL}/logout?${querystring.stringify(keycloakParams)}`),
+      returl: encodeURIComponent(`${authURL}/logout?${kcQueryString}`),
     };
 
-    const expectedURL = `${SITE_MINDER_LOGOUT_URLS.prod}?${querystring.stringify(siteMinderParams)}`;
+    const smQueryString = Object.keys(siteMinderParams)
+      .map((key) => `${key}=${siteMinderParams[key]}`)
+      .join('&');
+
+    const expectedURL = `${SITE_MINDER_LOGOUT_URLS.prod}?${smQueryString}`;
 
     expect(getLogoutURL(props)).toBe(expectedURL);
   });
@@ -83,18 +106,26 @@ describe('getLogoutURL', () => {
       ssoEnvironment: 'dev',
     };
 
-    const keycloakParams = {
+    const keycloakParams: Record<string, unknown> = {
       id_token_hint: props.idToken,
-      post_logout_redirect_uri: encodeURIComponent(props.postLogoutRedirectURI),
+      post_logout_redirect_uri: props.postLogoutRedirectURI,
     };
 
-    const authURL = `${AUTH_URLS.dev}/realms/standard/protocol/oidc`;
-    const siteMinderParams = {
+    const kcQueryString = Object.keys(keycloakParams)
+      .map((key) => `${key}=${keycloakParams[key]}`)
+      .join('&');
+
+    const authURL = `${AUTH_URLS.dev}/realms/standard/protocol/openid-connect`;
+    const siteMinderParams: Record<string, unknown> = {
       retnow: 1,
-      returl: encodeURIComponent(`${authURL}/logout?${querystring.stringify(keycloakParams)}`),
+      returl: encodeURIComponent(`${authURL}/logout?${kcQueryString}`),
     };
 
-    const expectedURL = `${SITE_MINDER_LOGOUT_URLS.dev}?${querystring.stringify(siteMinderParams)}`;
+    const smQueryString = Object.keys(siteMinderParams)
+      .map((key) => `${key}=${siteMinderParams[key]}`)
+      .join('&');
+
+    const expectedURL = `${SITE_MINDER_LOGOUT_URLS.dev}?${smQueryString}`;
 
     expect(getLogoutURL(props)).toBe(expectedURL);
   });

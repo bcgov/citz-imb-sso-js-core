@@ -21,7 +21,7 @@ export const getTokens = async (props: GetTokensProps): Promise<GetTokensRespons
     redirectURI,
     ssoEnvironment = 'dev',
     ssoRealm = 'standard',
-    ssoProtocol = 'oidc',
+    ssoProtocol = 'openid-connect',
   } = props;
 
   const params = {
@@ -67,7 +67,7 @@ export const getNewTokens = async (props: GetNewTokensProps): Promise<GetNewToke
     clientSecret,
     ssoEnvironment = 'dev',
     ssoRealm = 'standard',
-    ssoProtocol = 'oidc',
+    ssoProtocol = 'openid-connect',
   } = props;
 
   const isTokenValid = await isJWTValid({ jwt: refreshToken, clientID, clientSecret });
