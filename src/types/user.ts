@@ -1,12 +1,9 @@
 /* eslint-disable no-unused-vars */
-import type {
-  BceidIdentityProvider,
-  DigitalCredentialsIdentityProvider,
-  GithubIdentityProvider,
-  IdirIdentityProvider,
-  SSOIdentityProvider,
-} from './indentityProviders';
+import type { SSOIdentityProvider } from './indentityProviders';
 import { HasRolesOptions } from './options';
+
+export type IntegerAsString = `${number}` & `${bigint}`; // Accepts integers as a string type.
+export type BooleanAsString = `${boolean}`; // Accepts boolean (true | false) as a string type.
 
 type BaseTokenPayload<TProvider extends SSOIdentityProvider | unknown> = {
   exp: number;
@@ -62,6 +59,36 @@ export type SSOGithubUser = {
   email: string;
 };
 
+export type SSOBCServicesCardUser = {
+  display_name?: string;
+  given_name?: string;
+  family_name?: string;
+  given_names?: string;
+  email?: string;
+  gender?: string;
+  region?: string;
+  street_address?: string;
+  locality?: string;
+  address?: string;
+  postal_code?: string;
+  country?: string;
+  age?: IntegerAsString;
+  age_19_or_over?: BooleanAsString;
+  birthdate?: string;
+  authentication_zone_identifier?: string;
+  user_type?: 'Individual' | 'VerifiedIndividual';
+  transaction_type?: string;
+  identity_assurance_level1?: BooleanAsString;
+  identity_assurance_level2?: BooleanAsString;
+  identity_assurance_level3?: BooleanAsString;
+  authoritative_party_name?: string;
+  transaction_identifier?: string;
+  sector_identifier_uri?: string;
+  identification_level?: IntegerAsString;
+  identity_assurance_level?: IntegerAsString;
+  authoritative_party_identifier?: string;
+};
+
 type JsonString<T> = string & { __jsonString: T };
 export type VCPresentedAttributes<TDCAttributes extends object | undefined> =
   JsonString<TDCAttributes>;
@@ -71,18 +98,23 @@ export type SSODigitalCredentialsUser<TDCAttributes extends object | undefined> 
   vc_presented_attributes: VCPresentedAttributes<TDCAttributes>;
 };
 
-// Define a mapping object for the different user types
-type UserTypeMapping<TDCAttributes extends object | undefined> = {
-  [Key in SSOIdentityProvider]: Key extends IdirIdentityProvider
-    ? SSOIdirUser // Map IdirIdentityProvider to SSOIdirUser type
-    : Key extends BceidIdentityProvider
-      ? SSOBCeIDUser // Map BceidIdentityProvider to SSOBCeIDUser type
-      : Key extends GithubIdentityProvider
-        ? SSOGithubUser // Map GithubIdentityProvider to SSOGithubUser type
-        : Key extends DigitalCredentialsIdentityProvider
-          ? SSODigitalCredentialsUser<TDCAttributes> // Map DigitalCredentialsIdentityProvider to SSODigitalCredentialsUser type
-          : never;
+// Mapping between identity providers and their corresponding user types
+type UserTypeMappingTable<TDCAttributes extends object | undefined = undefined> = {
+  idir: SSOIdirUser;
+  azureidir: SSOIdirUser;
+  bceidbasic: SSOBCeIDUser;
+  bceidbusiness: SSOBCeIDUser;
+  bceidboth: SSOBCeIDUser;
+  githubbcgov: SSOGithubUser;
+  digitalcredential: SSODigitalCredentialsUser<TDCAttributes>;
 };
+
+type UserTypeMapping<
+  TProvider extends SSOIdentityProvider,
+  TDCAttributes extends object | undefined = undefined,
+> = TProvider extends keyof UserTypeMappingTable<TDCAttributes>
+  ? UserTypeMappingTable<TDCAttributes>[TProvider]
+  : SSOBCServicesCardUser;
 
 // Returns OriginalSSOUser type as a combination of BaseTokenPayload &
 // the associated identity provider user as long as TProvider is a valid idp.
@@ -91,7 +123,7 @@ export type OriginalSSOUser<
   TProvider extends SSOIdentityProvider | unknown,
   TDCAttributes extends object | undefined = undefined,
 > = TProvider extends SSOIdentityProvider
-  ? BaseTokenPayload<TProvider> & UserTypeMapping<TDCAttributes>[TProvider]
+  ? BaseTokenPayload<TProvider> & UserTypeMapping<TProvider, TDCAttributes>
   : BaseTokenPayload<unknown>;
 
 export type SSOUser<
