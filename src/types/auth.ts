@@ -3,7 +3,7 @@ import { SSOIdentityProvider } from './indentityProviders';
 
 export type AuthURL = typeof DEV_AUTH_URL | typeof TEST_AUTH_URL | typeof PROD_AUTH_URL;
 export type SSOEnvironment = 'dev' | 'test' | 'prod';
-export type SSOProtocol = 'oidc' | 'saml';
+export type SSOProtocol = 'openid-connect' | 'saml';
 
 type AuthURLMap = typeof AUTH_URLS;
 export type AuthURLForEnv<TEnvironment extends keyof AuthURLMap> = AuthURLMap[TEnvironment];

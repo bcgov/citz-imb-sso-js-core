@@ -1,4 +1,3 @@
-import qs from 'querystring';
 import { GetLogoutURLProps } from '../types';
 import { AUTH_URLS, SITE_MINDER_LOGOUT_URLS } from '../constants';
 
@@ -8,20 +7,28 @@ export const getLogoutURL = (props: GetLogoutURLProps): string => {
     postLogoutRedirectURI,
     ssoEnvironment = 'dev',
     ssoRealm = 'standard',
-    ssoProtocol = 'oidc',
+    ssoProtocol = 'openid-connect',
   } = props;
 
   const authURL = `${AUTH_URLS[ssoEnvironment]}/realms/${ssoRealm}/protocol/${ssoProtocol}`;
 
-  const keycloakParams = {
+  const keycloakParams: Record<string, string> = {
     id_token_hint: idToken,
-    post_logout_redirect_uri: encodeURIComponent(postLogoutRedirectURI),
+    post_logout_redirect_uri: postLogoutRedirectURI,
   };
 
-  const siteMinderParams = {
+  const kcQueryString = Object.keys(keycloakParams)
+    .map((key) => `${key}=${keycloakParams[key]}`)
+    .join('&');
+
+  const siteMinderParams: Record<string, unknown> = {
     retnow: 1,
-    returl: encodeURIComponent(`${authURL}/logout?${qs.stringify(keycloakParams)}`),
+    returl: encodeURIComponent(`${authURL}/logout?${kcQueryString}`),
   };
 
-  return `${SITE_MINDER_LOGOUT_URLS[ssoEnvironment]}?${qs.stringify(siteMinderParams)}`;
+  const smQueryString = Object.keys(siteMinderParams)
+    .map((key) => `${key}=${siteMinderParams[key]}`)
+    .join('&');
+
+  return `${SITE_MINDER_LOGOUT_URLS[ssoEnvironment]}?${smQueryString}`;
 };

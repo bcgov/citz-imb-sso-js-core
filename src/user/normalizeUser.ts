@@ -18,7 +18,7 @@ import { hasRoles } from './hasRoles';
 
 // Combine properties of each user type into a single object
 export const normalizeUser = <
-  TProvider extends SSOIdentityProvider,
+  TProvider extends SSOIdentityProvider | unknown,
   TDCAttributes extends object | undefined = undefined,
 >(
   userInfo: OriginalSSOUser<TProvider, TDCAttributes>,
@@ -59,6 +59,7 @@ export const normalizeUser = <
 
     normalizedUser.first_name = idirUser?.given_name;
     normalizedUser.last_name = idirUser?.family_name;
+    normalizedUser.display_name = idirUser?.display_name;
   } else if (BCEID_IDPs.includes(idp as BceidIdentityProvider)) {
     // Normalize BCeID user properties
     const bceidUser = userInfo as OriginalSSOUser<BceidIdentityProvider>;
@@ -66,6 +67,7 @@ export const normalizeUser = <
     normalizedUser.email = bceidUser?.email;
     normalizedUser.guid = bceidUser?.bceid_user_guid;
     normalizedUser.username = bceidUser?.bceid_username;
+    normalizedUser.display_name = bceidUser?.display_name;
 
     const nameParts = bceidUser?.display_name.split(' ');
     normalizedUser.first_name = nameParts[0];
@@ -77,6 +79,7 @@ export const normalizeUser = <
     normalizedUser.email = ghUser?.email;
     normalizedUser.guid = ghUser?.github_id;
     normalizedUser.username = ghUser?.github_username;
+    normalizedUser.display_name = ghUser?.display_name;
 
     const nameParts = ghUser?.display_name.split(' ');
     normalizedUser.first_name = nameParts[0];

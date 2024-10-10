@@ -37,7 +37,7 @@ describe('isJWTValid', () => {
     };
 
     expect(fetchMock).toHaveBeenCalledWith(
-      `${AUTH_URLS.dev}/realms/standard/protocol/oidc/token/introspect`,
+      `${AUTH_URLS.dev}/realms/standard/protocol/openid-connect/token/introspect`,
       {
         method: 'POST',
         headers: {
@@ -91,7 +91,7 @@ describe('isJWTValid', () => {
     };
 
     expect(fetchMock).toHaveBeenCalledWith(
-      `${AUTH_URLS.test}/realms/custom/protocol/oidc/token/introspect`,
+      `${AUTH_URLS.test}/realms/custom/protocol/openid-connect/token/introspect`,
       {
         method: 'POST',
         headers: {

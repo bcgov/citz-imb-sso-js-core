@@ -1,4 +1,3 @@
-import qs from 'querystring';
 import { GetLoginURLProps } from '../types';
 import { AUTH_URLS } from '../constants';
 
@@ -15,18 +14,22 @@ export const getLoginURL = (props: GetLoginURLProps): string => {
     redirectURI,
     ssoEnvironment = 'dev',
     ssoRealm = 'standard',
-    ssoProtocol = 'oidc',
+    ssoProtocol = 'openid-connect',
   } = props;
 
   const authURL = `${AUTH_URLS[ssoEnvironment]}/realms/${ssoRealm}/protocol/${ssoProtocol}`;
 
-  const params = {
+  const params: Record<string, string> = {
     client_id: clientID,
     response_type: responseType,
     scope: scope,
-    redirect_uri: encodeURIComponent(redirectURI),
+    redirect_uri: redirectURI,
     kc_idp_hint: idpHint,
   };
 
-  return `${authURL}/auth?${qs.stringify(params)}`;
+  const queryString = Object.keys(params)
+    .map((key) => `${key}=${params[key]}`)
+    .join('&');
+
+  return `${authURL}/auth?${queryString}`;
 };

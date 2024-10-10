@@ -1,11 +1,11 @@
 import { HasRolesOptions, OriginalSSOUser, SSOIdentityProvider } from '@/types';
 
 // Checks if user has all the roles in the requiredRoles array.
-const hasAllRoles = (userRoles: string[], requiredRoles: string[]) =>
+export const hasAllRoles = (userRoles: string[], requiredRoles: string[]) =>
   requiredRoles.every((role) => userRoles.includes(role));
 
 // Checks if user has at least one role in requiredRoles array.
-const hasAtLeastOneRole = (userRoles: string[], requiredRoles: string[]) =>
+export const hasAtLeastOneRole = (userRoles: string[], requiredRoles: string[]) =>
   requiredRoles.some((role) => userRoles.includes(role));
 
 // Return true if the user has the specified roles.
