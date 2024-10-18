@@ -1,5 +1,5 @@
-import { AUTH_URLS, DEV_AUTH_URL, PROD_AUTH_URL, TEST_AUTH_URL } from '../constants';
-import { SSOIdentityProvider } from './indentityProviders';
+import type { AUTH_URLS, DEV_AUTH_URL, PROD_AUTH_URL, TEST_AUTH_URL } from '../constants';
+import type { SSOIdentityProvider } from './indentityProviders';
 
 export type AuthURL = typeof DEV_AUTH_URL | typeof TEST_AUTH_URL | typeof PROD_AUTH_URL;
 export type SSOEnvironment = 'dev' | 'test' | 'prod';
@@ -13,7 +13,7 @@ export type SiteMinderLogoutURLForEnv<TEnvironment extends keyof SiteMinderLogou
   SiteMinderLogoutURLMap[TEnvironment];
 
 export type GetLoginURLProps = {
-  idpHint: SSOIdentityProvider;
+  idpHint?: SSOIdentityProvider;
   clientID: string;
   responseType?: string;
   scope?: string;
@@ -63,6 +63,7 @@ export type IsJWTValidProps = {
 export type GetTokensResponse = {
   id_token: string;
   access_token: string;
+  expires_in: string;
   refresh_token: string;
   refresh_expires_in: number;
 };

@@ -1,4 +1,4 @@
-import { decodeJWT } from '@/jwt';
+import { decodeJWT } from '@/authentication';
 
 describe('decodeJWT', () => {
   it('should decode a valid JWT and return the payload as a JSON object', () => {

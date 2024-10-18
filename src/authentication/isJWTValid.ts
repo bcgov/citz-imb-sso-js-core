@@ -1,6 +1,6 @@
-import querystring from 'querystring';
+import qs from 'node:querystring';
 import { AUTH_URLS } from '../constants';
-import { IsJWTValidProps } from '../types';
+import type { IsJWTValidProps } from '../types';
 
 export const isJWTValid = async (props: IsJWTValidProps): Promise<boolean> => {
   const {
@@ -28,12 +28,11 @@ export const isJWTValid = async (props: IsJWTValidProps): Promise<boolean> => {
   const response = await fetch(`${authURL}/token/introspect`, {
     method: 'POST',
     headers,
-    body: querystring.stringify(params),
+    body: qs.stringify(params),
   });
 
-  if (!response.ok) {
+  if (!response.ok)
     throw new Error(`Failed to validate JWT: ${response.status} ${response.statusText}`);
-  }
 
   const { active } = await response.json();
   return active;

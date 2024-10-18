@@ -11,7 +11,7 @@ describe('getLogoutURL', () => {
 
     const keycloakParams: Record<string, unknown> = {
       id_token_hint: props.idToken,
-      post_logout_redirect_uri: props.postLogoutRedirectURI,
+      post_logout_redirect_uri: encodeURIComponent(props.postLogoutRedirectURI),
     };
 
     const kcQueryString = Object.keys(keycloakParams)
@@ -44,7 +44,7 @@ describe('getLogoutURL', () => {
 
     const keycloakParams: Record<string, unknown> = {
       id_token_hint: props.idToken,
-      post_logout_redirect_uri: props.postLogoutRedirectURI,
+      post_logout_redirect_uri: encodeURIComponent(props.postLogoutRedirectURI),
     };
 
     const kcQueryString = Object.keys(keycloakParams)
@@ -77,7 +77,7 @@ describe('getLogoutURL', () => {
 
     const keycloakParams: Record<string, unknown> = {
       id_token_hint: props.idToken,
-      post_logout_redirect_uri: props.postLogoutRedirectURI,
+      post_logout_redirect_uri: encodeURIComponent(props.postLogoutRedirectURI),
     };
 
     const kcQueryString = Object.keys(keycloakParams)
@@ -108,7 +108,7 @@ describe('getLogoutURL', () => {
 
     const keycloakParams: Record<string, unknown> = {
       id_token_hint: props.idToken,
-      post_logout_redirect_uri: props.postLogoutRedirectURI,
+      post_logout_redirect_uri: encodeURIComponent(props.postLogoutRedirectURI),
     };
 
     const kcQueryString = Object.keys(keycloakParams)
