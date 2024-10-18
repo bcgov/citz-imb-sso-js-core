@@ -1,4 +1,4 @@
-import {
+import type {
   OriginalSSOUser,
   SSOUser,
   SSOIdentityProvider,
@@ -109,10 +109,10 @@ export const normalizeUser = <
 
     const nameParts = bcscUser?.display_name?.split(' ');
 
-    const first_name = bcscUser?.given_name ?? (nameParts && nameParts[0]);
+    const first_name = bcscUser?.given_name ?? (nameParts?.[0]);
     if (first_name) normalizedUser.first_name = first_name;
 
-    const last_name = bcscUser?.family_name ?? (nameParts && nameParts.slice(1).join(' '));
+    const last_name = bcscUser?.family_name ?? nameParts?.slice(1).join(' ');
     if (last_name) normalizedUser.last_name = last_name;
   }
 

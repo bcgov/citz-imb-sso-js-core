@@ -1,6 +1,6 @@
-import qs from 'querystring';
+import qs from 'node:querystring';
 import { AUTH_URLS } from '../constants';
-import { IsJWTValidProps } from '../types';
+import type { IsJWTValidProps } from '../types';
 
 export const isJWTValid = async (props: IsJWTValidProps): Promise<boolean> => {
   const {

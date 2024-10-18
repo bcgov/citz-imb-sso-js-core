@@ -1,5 +1,5 @@
-import { AUTH_URLS, DEV_AUTH_URL, PROD_AUTH_URL, TEST_AUTH_URL } from '../constants';
-import { SSOIdentityProvider } from './indentityProviders';
+import type { AUTH_URLS, DEV_AUTH_URL, PROD_AUTH_URL, TEST_AUTH_URL } from '../constants';
+import type { SSOIdentityProvider } from './indentityProviders';
 
 export type AuthURL = typeof DEV_AUTH_URL | typeof TEST_AUTH_URL | typeof PROD_AUTH_URL;
 export type SSOEnvironment = 'dev' | 'test' | 'prod';

@@ -1,4 +1,4 @@
-import { GetLoginURLProps } from '../types';
+import type { GetLoginURLProps } from '../types';
 import { AUTH_URLS } from '../constants';
 
 /**

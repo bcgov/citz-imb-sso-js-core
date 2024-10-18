@@ -1,4 +1,4 @@
-import { GetLogoutURLProps } from '../types';
+import type { GetLogoutURLProps } from '../types';
 import { AUTH_URLS, SITE_MINDER_LOGOUT_URLS } from '../constants';
 
 export const getLogoutURL = (props: GetLogoutURLProps): string => {

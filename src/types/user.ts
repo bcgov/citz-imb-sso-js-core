@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */ 
 import type { SSOIdentityProvider } from './indentityProviders';
-import { HasRolesOptions } from './options';
+import type { HasRolesOptions } from './options';
 
 export type IntegerAsString = `${number}` & `${bigint}`; // Accepts integers as a string type.
 export type BooleanAsString = `${boolean}`; // Accepts boolean (true | false) as a string type.

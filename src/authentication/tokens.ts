@@ -1,5 +1,5 @@
-import qs from 'querystring';
-import {
+import qs from 'node:querystring';
+import type {
   GetNewTokensProps,
   GetNewTokensResponse,
   GetTokensProps,
