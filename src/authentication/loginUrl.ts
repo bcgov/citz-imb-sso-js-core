@@ -19,12 +19,12 @@ export const getLoginURL = (props: GetLoginURLProps): string => {
 
   const authURL = `${AUTH_URLS[ssoEnvironment]}/realms/${ssoRealm}/protocol/${ssoProtocol}`;
 
-  const params: Record<string, string> = {
+  const params: Record<string, string | undefined> = {
     client_id: clientID,
     response_type: responseType,
     scope: scope,
-    redirect_uri: redirectURI,
     kc_idp_hint: idpHint,
+    redirect_uri: encodeURIComponent(redirectURI),
   };
 
   const queryString = Object.keys(params)

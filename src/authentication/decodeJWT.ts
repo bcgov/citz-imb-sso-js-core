@@ -1,4 +1,6 @@
-export const decodeJWT = (jwt: string): Record<string, unknown> => {
+import { BaseTokenPayload } from 'src/types';
+
+export const decodeJWT = (jwt: string): BaseTokenPayload<unknown> => {
   const parts = jwt.split('.');
   if (parts.length !== 3) {
     throw new Error('Invalid JWT format');

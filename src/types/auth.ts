@@ -13,7 +13,7 @@ export type SiteMinderLogoutURLForEnv<TEnvironment extends keyof SiteMinderLogou
   SiteMinderLogoutURLMap[TEnvironment];
 
 export type GetLoginURLProps = {
-  idpHint: SSOIdentityProvider;
+  idpHint?: SSOIdentityProvider;
   clientID: string;
   responseType?: string;
   scope?: string;
@@ -63,6 +63,7 @@ export type IsJWTValidProps = {
 export type GetTokensResponse = {
   id_token: string;
   access_token: string;
+  expires_in: string;
   refresh_token: string;
   refresh_expires_in: number;
 };

@@ -14,8 +14,8 @@ describe('getLoginURL', () => {
       client_id: props.clientID,
       response_type: 'code',
       scope: 'email+openid',
-      redirect_uri: props.redirectURI,
-      kc_idp_hint: props.idpHint,
+      kc_idp_hint: props.idpHint!,
+      redirect_uri: encodeURIComponent(props.redirectURI),
     };
 
     const queryString = Object.keys(params)
@@ -43,8 +43,8 @@ describe('getLoginURL', () => {
       client_id: props.clientID,
       response_type: props.responseType,
       scope: props.scope,
-      redirect_uri: props.redirectURI,
-      kc_idp_hint: props.idpHint,
+      kc_idp_hint: props.idpHint!,
+      redirect_uri: encodeURIComponent(props.redirectURI),
     };
 
     const queryString = Object.keys(params)
@@ -72,8 +72,8 @@ describe('getLoginURL', () => {
       client_id: props.clientID,
       response_type: props.responseType,
       scope: props.scope,
-      redirect_uri: props.redirectURI,
-      kc_idp_hint: props.idpHint,
+      kc_idp_hint: props.idpHint!,
+      redirect_uri: encodeURIComponent(props.redirectURI),
     };
 
     const queryString = Object.keys(params)
@@ -97,8 +97,8 @@ describe('getLoginURL', () => {
       client_id: props.clientID,
       response_type: 'code',
       scope: 'email+openid',
-      redirect_uri: props.redirectURI,
-      kc_idp_hint: props.idpHint,
+      kc_idp_hint: props.idpHint!,
+      redirect_uri: encodeURIComponent(props.redirectURI),
     };
 
     const queryString = Object.keys(params)
