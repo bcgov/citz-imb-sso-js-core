@@ -1,6 +1,6 @@
 {
   "name": "@bcgov/citz-imb-sso-js-core",
-  "version": "1.0.0-beta",
+  "version": "1.0.0-rc",
   "description": "BCGov JavaScript SSO Integration Core",
   "author": "CITZ IMB Common Code <citz.codemvp@gov.bc.ca>",
   "license": "Apache-2.0",
