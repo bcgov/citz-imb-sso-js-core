@@ -1,4 +1,4 @@
-import type { BaseTokenPayload } from 'src/types';
+import type { BaseTokenPayload } from '../types';
 
 export const decodeJWT = (jwt: string): BaseTokenPayload<unknown> => {
   const parts = jwt.split('.');

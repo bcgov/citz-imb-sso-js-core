@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */ 
 import type { SSOIdentityProvider } from './indentityProviders';
 import type { HasRolesOptions } from './options';
 
