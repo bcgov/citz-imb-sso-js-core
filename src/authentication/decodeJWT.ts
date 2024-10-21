@@ -1,4 +1,6 @@
-export const decodeJWT = (jwt: string): Record<string, unknown> => {
+import type { BaseTokenPayload } from '../types';
+
+export const decodeJWT = (jwt: string): BaseTokenPayload<unknown> => {
   const parts = jwt.split('.');
   if (parts.length !== 3) {
     throw new Error('Invalid JWT format');
@@ -13,8 +15,7 @@ export const decodeJWT = (jwt: string): Record<string, unknown> => {
       throw new Error(
         `Invalid input in decodeJWT(jwt: string) function of 'citz-imb-sso-js-core': ${error.message}`,
       );
-    } else {
-      throw new Error(`Unknown error occurred in decodeJWT() function of 'citz-imb-sso-js-core'`);
-    }
+    } 
+    throw new Error(`Unknown error occurred in decodeJWT() function of 'citz-imb-sso-js-core'`);
   }
 };

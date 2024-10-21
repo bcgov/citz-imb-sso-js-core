@@ -185,6 +185,9 @@ describe('getNewTokens', () => {
       jwt: props.refreshToken,
       clientID: props.clientID,
       clientSecret: props.clientSecret,
+      ssoEnvironment: "dev",
+      ssoProtocol: "openid-connect",
+      ssoRealm: "standard",
     });
   });
 
@@ -206,6 +209,9 @@ describe('getNewTokens', () => {
       jwt: props.refreshToken,
       clientID: props.clientID,
       clientSecret: props.clientSecret,
+      ssoEnvironment: "dev",
+      ssoProtocol: "openid-connect",
+      ssoRealm: "standard",
     });
   });
 
@@ -233,6 +239,9 @@ describe('getNewTokens', () => {
       jwt: props.refreshToken,
       clientID: props.clientID,
       clientSecret: props.clientSecret,
+      ssoEnvironment: "dev",
+      ssoProtocol: "openid-connect",
+      ssoRealm: "standard",
     });
   });
 
@@ -282,6 +291,9 @@ describe('getNewTokens', () => {
       jwt: props.refreshToken,
       clientID: props.clientID,
       clientSecret: props.clientSecret,
+      ssoEnvironment: "test",
+      ssoProtocol: "openid-connect",
+      ssoRealm: "custom",
     });
   });
 });

@@ -1,4 +1,4 @@
-import { GetLogoutURLProps } from '../types';
+import type { GetLogoutURLProps } from '../types';
 import { AUTH_URLS, SITE_MINDER_LOGOUT_URLS } from '../constants';
 
 export const getLogoutURL = (props: GetLogoutURLProps): string => {
@@ -14,7 +14,7 @@ export const getLogoutURL = (props: GetLogoutURLProps): string => {
 
   const keycloakParams: Record<string, string> = {
     id_token_hint: idToken,
-    post_logout_redirect_uri: postLogoutRedirectURI,
+    post_logout_redirect_uri: encodeURIComponent(postLogoutRedirectURI),
   };
 
   const kcQueryString = Object.keys(keycloakParams)

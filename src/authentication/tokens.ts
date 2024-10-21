@@ -1,5 +1,5 @@
-import qs from 'querystring';
-import {
+import qs from 'node:querystring';
+import type {
   GetNewTokensProps,
   GetNewTokensResponse,
   GetTokensProps,
@@ -50,11 +50,13 @@ export const getTokens = async (props: GetTokensProps): Promise<GetTokensRespons
     throw new Error(`Failed to fetch tokens: ${response.status} ${response.statusText}`);
   }
 
-  const { id_token, access_token, refresh_token, refresh_expires_in } = await response.json();
+  const { id_token, access_token, expires_in, refresh_token, refresh_expires_in } =
+    await response.json();
 
   return {
     id_token,
     access_token,
+    expires_in,
     refresh_token,
     refresh_expires_in,
   };
@@ -70,7 +72,14 @@ export const getNewTokens = async (props: GetNewTokensProps): Promise<GetNewToke
     ssoProtocol = 'openid-connect',
   } = props;
 
-  const isTokenValid = await isJWTValid({ jwt: refreshToken, clientID, clientSecret });
+  const isTokenValid = await isJWTValid({
+    jwt: refreshToken,
+    clientID,
+    clientSecret,
+    ssoEnvironment,
+    ssoProtocol,
+    ssoRealm,
+  });
   if (!isTokenValid) return null;
 
   const params = {
@@ -88,8 +97,10 @@ export const getNewTokens = async (props: GetNewTokensProps): Promise<GetNewToke
     body: qs.stringify(params),
   });
 
-  const { access_token, id_token, expires_in } = await response.json();
-  if (!access_token || !id_token)
+  const data = await response.json();
+
+  const { access_token, id_token, expires_in } = data;
+  if (!data || !access_token || !id_token)
     throw new Error("Couldn't get access or id token from KC token endpoint");
 
   return { access_token, id_token, expires_in };
