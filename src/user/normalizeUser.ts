@@ -7,6 +7,7 @@ import {
   GithubIdentityProvider,
   DigitalCredentialsIdentityProvider,
   HasRolesOptions,
+  ClientIDProvider,
 } from '../types';
 import {
   BCEID_IDENTITY_PROVIDERS as BCEID_IDPs,
@@ -90,12 +91,29 @@ export const normalizeUser = <
     const attributes = JSON.parse(dcUser.vc_presented_attributes);
 
     normalizedUser.guid = dcUser.preferred_username.split('@')[0];
+    normalizedUser.username = dcUser?.preferred_username.split('@')[0];
 
     normalizedUser.email = attributes?.email;
   } else {
-    throw new Error(
-      `Unknown identity provider '${idp}' used in normalizeUser function of 'citz-imb-sso-js-core'.`,
-    );
+    // Is either BCService card as type ClientIDProvider or unknown.
+    const bcscUser = userInfo as OriginalSSOUser<ClientIDProvider>;
+
+    normalizedUser.guid = bcscUser.preferred_username.split('@')[0];
+    normalizedUser.username = bcscUser?.preferred_username.split('@')[0];
+
+    const display_name = bcscUser?.display_name;
+    if (display_name) normalizedUser.display_name = display_name;
+
+    const email = bcscUser?.email;
+    if (email) normalizedUser.email = email;
+
+    const nameParts = bcscUser?.display_name?.split(' ');
+
+    const first_name = bcscUser?.given_name ?? (nameParts && nameParts[0]);
+    if (first_name) normalizedUser.first_name = first_name;
+
+    const last_name = bcscUser?.family_name ?? (nameParts && nameParts.slice(1).join(' '));
+    if (last_name) normalizedUser.last_name = last_name;
   }
 
   return normalizedUser as SSOUser<TProvider, TDCAttributes>;
