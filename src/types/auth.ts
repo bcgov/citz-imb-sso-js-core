@@ -1,16 +1,26 @@
-import type { AUTH_URLS, DEV_AUTH_URL, PROD_AUTH_URL, TEST_AUTH_URL } from '../constants';
-import type { SSOIdentityProvider } from './indentityProviders';
+import type {
+  AUTH_URLS,
+  DEV_AUTH_URL,
+  PROD_AUTH_URL,
+  TEST_AUTH_URL,
+} from "../constants";
+import type { SSOIdentityProvider } from "./indentityProviders";
 
-export type AuthURL = typeof DEV_AUTH_URL | typeof TEST_AUTH_URL | typeof PROD_AUTH_URL;
-export type SSOEnvironment = 'dev' | 'test' | 'prod';
-export type SSOProtocol = 'openid-connect' | 'saml';
+export type AuthURL =
+  | typeof DEV_AUTH_URL
+  | typeof TEST_AUTH_URL
+  | typeof PROD_AUTH_URL;
+export type SSOEnvironment = "dev" | "test" | "prod";
+export type SSOProtocol = "openid-connect" | "saml";
 
 type AuthURLMap = typeof AUTH_URLS;
-export type AuthURLForEnv<TEnvironment extends keyof AuthURLMap> = AuthURLMap[TEnvironment];
+export type AuthURLForEnv<TEnvironment extends keyof AuthURLMap> =
+  AuthURLMap[TEnvironment];
 
 type SiteMinderLogoutURLMap = typeof AUTH_URLS;
-export type SiteMinderLogoutURLForEnv<TEnvironment extends keyof SiteMinderLogoutURLMap> =
-  SiteMinderLogoutURLMap[TEnvironment];
+export type SiteMinderLogoutURLForEnv<
+  TEnvironment extends keyof SiteMinderLogoutURLMap
+> = SiteMinderLogoutURLMap[TEnvironment];
 
 export type GetLoginURLProps = {
   idpHint?: SSOIdentityProvider;
@@ -72,4 +82,6 @@ export type GetNewTokensResponse = {
   access_token: string;
   id_token: string;
   expires_in: number;
+  refresh_token: string;
+  refresh_expires_in: number;
 } | null;

@@ -1,27 +1,29 @@
-import qs from 'node:querystring';
+import qs from "node:querystring";
 import type {
   GetNewTokensProps,
   GetNewTokensResponse,
   GetTokensProps,
   GetTokensResponse,
-} from '../types';
-import { AUTH_URLS } from '../constants';
-import { isJWTValid } from './isJWTValid';
+} from "../types";
+import { AUTH_URLS } from "../constants";
+import { isJWTValid } from "./isJWTValid";
 
 /**
  * Gets decoded tokens and user information using a code.
  * See https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.3
  */
-export const getTokens = async (props: GetTokensProps): Promise<GetTokensResponse> => {
+export const getTokens = async (
+  props: GetTokensProps
+): Promise<GetTokensResponse> => {
   const {
     code,
-    grantType = 'authorization_code',
+    grantType = "authorization_code",
     clientID,
     clientSecret,
     redirectURI,
-    ssoEnvironment = 'dev',
-    ssoRealm = 'standard',
-    ssoProtocol = 'openid-connect',
+    ssoEnvironment = "dev",
+    ssoRealm = "standard",
+    ssoProtocol = "openid-connect",
   } = props;
 
   const params = {
@@ -31,27 +33,36 @@ export const getTokens = async (props: GetTokensProps): Promise<GetTokensRespons
     code,
   };
 
-  const encodedAuthHeader = Buffer.from(`${clientID}:${clientSecret}`).toString('base64');
+  const encodedAuthHeader = Buffer.from(`${clientID}:${clientSecret}`).toString(
+    "base64"
+  );
 
   const headers = {
     Authorization: `Basic ${encodedAuthHeader}`,
-    'Content-Type': 'application/x-www-form-urlencoded',
+    "Content-Type": "application/x-www-form-urlencoded",
   };
 
   const authURL = `${AUTH_URLS[ssoEnvironment]}/realms/${ssoRealm}/protocol/${ssoProtocol}`;
 
   const response = await fetch(`${authURL}/token`, {
-    method: 'POST',
+    method: "POST",
     headers,
     body: qs.stringify(params),
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch tokens: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Failed to fetch tokens: ${response.status} ${response.statusText}`
+    );
   }
 
-  const { id_token, access_token, expires_in, refresh_token, refresh_expires_in } =
-    await response.json();
+  const {
+    id_token,
+    access_token,
+    expires_in,
+    refresh_token,
+    refresh_expires_in,
+  } = await response.json();
 
   return {
     id_token,
@@ -62,14 +73,16 @@ export const getTokens = async (props: GetTokensProps): Promise<GetTokensRespons
   };
 };
 
-export const getNewTokens = async (props: GetNewTokensProps): Promise<GetNewTokensResponse> => {
+export const getNewTokens = async (
+  props: GetNewTokensProps
+): Promise<GetNewTokensResponse> => {
   const {
     refreshToken,
     clientID,
     clientSecret,
-    ssoEnvironment = 'dev',
-    ssoRealm = 'standard',
-    ssoProtocol = 'openid-connect',
+    ssoEnvironment = "dev",
+    ssoRealm = "standard",
+    ssoProtocol = "openid-connect",
   } = props;
 
   const isTokenValid = await isJWTValid({
@@ -83,7 +96,7 @@ export const getNewTokens = async (props: GetNewTokensProps): Promise<GetNewToke
   if (!isTokenValid) return null;
 
   const params = {
-    grant_type: 'refresh_token',
+    grant_type: "refresh_token",
     client_id: clientID,
     client_secret: clientSecret,
     refresh_token: refreshToken,
@@ -92,16 +105,28 @@ export const getNewTokens = async (props: GetNewTokensProps): Promise<GetNewToke
   const authURL = `${AUTH_URLS[ssoEnvironment]}/realms/${ssoRealm}/protocol/${ssoProtocol}`;
 
   const response = await fetch(`${authURL}/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: qs.stringify(params),
   });
 
   const data = await response.json();
 
-  const { access_token, id_token, expires_in } = data;
+  const {
+    access_token,
+    refresh_token,
+    id_token,
+    expires_in,
+    refresh_expires_in,
+  } = data;
   if (!data || !access_token || !id_token)
     throw new Error("Couldn't get access or id token from KC token endpoint");
 
-  return { access_token, id_token, expires_in };
+  return {
+    access_token,
+    refresh_token,
+    id_token,
+    expires_in,
+    refresh_expires_in,
+  };
 };
