@@ -1,39 +1,26 @@
-import qs from 'node:querystring';
-import { AUTH_URLS } from '../constants';
+import { decodeJWT } from './decodeJWT';
 import type { IsJWTValidProps } from '../types';
 
+/**
+ * Validates a JWT by checking that it has not expired.
+ *
+ * This performs a local check only - it decodes the token's payload and
+ * compares its `exp` claim against the current time. No network call to the
+ * SSO server's token introspection endpoint is made. Tokens that cannot be
+ * decoded or that carry no valid `exp` claim are treated as invalid.
+ */
 export const isJWTValid = async (props: IsJWTValidProps): Promise<boolean> => {
-  const {
-    jwt,
-    clientID,
-    clientSecret,
-    ssoEnvironment = 'dev',
-    ssoRealm = 'standard',
-    ssoProtocol = 'openid-connect',
-  } = props;
+  const { jwt } = props;
 
-  const params = {
-    client_id: clientID,
-    client_secret: clientSecret,
-    token: jwt,
-  };
+  let payload;
+  try {
+    payload = decodeJWT(jwt);
+  } catch {
+    return false;
+  }
 
-  const headers = {
-    Accept: '*/*',
-    'Content-Type': 'application/x-www-form-urlencoded',
-  };
+  const { exp } = payload;
+  if (typeof exp !== 'number' || !Number.isFinite(exp)) return false;
 
-  const authURL = `${AUTH_URLS[ssoEnvironment]}/realms/${ssoRealm}/protocol/${ssoProtocol}`;
-
-  const response = await fetch(`${authURL}/token/introspect`, {
-    method: 'POST',
-    headers,
-    body: qs.stringify(params),
-  });
-
-  if (!response.ok)
-    throw new Error(`Failed to validate JWT: ${response.status} ${response.statusText}`);
-
-  const { active } = await response.json();
-  return active;
+  return exp * 1000 > Date.now();
 };

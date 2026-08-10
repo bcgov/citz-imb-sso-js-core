@@ -109,4 +109,26 @@ describe('getLoginURL', () => {
 
     expect(getLoginURL(props)).toBe(expectedURL);
   });
+
+  it('should omit kc_idp_hint when no idpHint is provided', () => {
+    const props: GetLoginURLProps = {
+      clientID: 'client-id',
+      redirectURI: 'https://myapp.com/callback',
+    };
+
+    const params: Record<string, unknown> = {
+      client_id: props.clientID,
+      response_type: 'code',
+      scope: 'email+openid',
+      redirect_uri: encodeURIComponent(props.redirectURI),
+    };
+
+    const queryString = Object.keys(params)
+      .map((key) => `${key}=${params[key]}`)
+      .join('&');
+
+    const expectedURL = `${AUTH_URLS.dev}/realms/standard/protocol/openid-connect/auth?${queryString}`;
+
+    expect(getLoginURL(props)).toBe(expectedURL);
+  });
 });

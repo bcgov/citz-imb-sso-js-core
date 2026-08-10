@@ -19,17 +19,17 @@ export const getLoginURL = (props: GetLoginURLProps): string => {
 
   const authURL = `${AUTH_URLS[ssoEnvironment]}/realms/${ssoRealm}/protocol/${ssoProtocol}`;
 
-  const params: Record<string, string | undefined> = {
-    client_id: clientID,
-    response_type: responseType,
-    scope: scope,
-    kc_idp_hint: idpHint,
-    redirect_uri: encodeURIComponent(redirectURI),
-  };
+  const queryParams: Array<[string, string]> = [
+    ['client_id', clientID],
+    ['response_type', responseType],
+    ['scope', scope],
+  ];
+  if (idpHint) {
+    queryParams.push(['kc_idp_hint', idpHint]);
+  }
+  queryParams.push(['redirect_uri', encodeURIComponent(redirectURI)]);
 
-  const queryString = Object.keys(params)
-    .map((key) => `${key}=${params[key]}`)
-    .join('&');
+  const queryString = queryParams.map(([key, value]) => `${key}=${value}`).join('&');
 
   return `${authURL}/auth?${queryString}`;
 };
