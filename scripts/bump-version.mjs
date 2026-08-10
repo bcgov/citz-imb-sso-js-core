@@ -38,7 +38,8 @@ import { resolve } from 'path';
 
 // Parse and validate version numbers
 const parseVersion = (version) => {
-  const parts = version.split('.');
+  const mainVersion = version.split('-')[0]; // Strip any pre-release tag (e.g., "1.0.1-beta" -> "1.0.1")
+  const parts = mainVersion.split('.');
   if (parts.length !== 3 || parts.some((part) => isNaN(Number(part)))) {
     throw new Error('Invalid version number');
   }
